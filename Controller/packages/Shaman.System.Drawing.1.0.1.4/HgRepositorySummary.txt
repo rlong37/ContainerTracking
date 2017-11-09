@@ -1,0 +1,6 @@
+parent: 5:9b1743eb1919 tip
+ netstandard2.0 support
+branch: default
+commit: 1 modified
+update: (current)
+phases: 1 draft
