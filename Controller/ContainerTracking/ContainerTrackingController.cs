@@ -18,7 +18,7 @@ namespace ContainerTracking
 
             //store cameraID and image in variables
             //temporary values until camera is working
-            Image i = Image.FromFile("image.jpeg");
+            Image i = Image.FromFile("D:\\Programming\\Git\\ContainerTracking\\ImageToText\\label1.png");
             int cameraID = 1;
 
             //call Python application to extract text
@@ -37,33 +37,20 @@ namespace ContainerTracking
 
         public static String extractText(Image i)
         {
-            //call Python application, send it the photo so it can clean and extract text
-            String python = @"path to python program";
-
-            //python app to call
-            String imageToText = "extractText.py";
-
-
-            //create new process start info
-            ProcessStartInfo myProcessStartInfo = new ProcessStartInfo(python);
-
-            //make sure we can read the output from stdout
-            myProcessStartInfo.UseShellExecute = false;
-            myProcessStartInfo.RedirectStandardOutput = true;
-
-            //start python script with argument
-            myProcessStartInfo.Arguments = imageToText + " " + i;
-            Process newProcess = new Process();
-            newProcess.StartInfo = myProcessStartInfo;
-            newProcess.Start();
-
-            //get output from python script
-            StreamReader streamReader = newProcess.StandardOutput;
-            string labelText = streamReader.ReadLine();
-
-            //wait for exit signal from Python script then close it 
-            newProcess.WaitForExit();
-            newProcess.Close();
+            string labelText;
+            ProcessStartInfo start = new ProcessStartInfo();
+            start.FileName = "D:\\Python\\Python36\\python.exe"; //cmd is full path to python.exe
+            start.Arguments = "D:\\Programming\\Git\\ContainerTracking\\ImageToText\\ExtractText.py"; //args is path to .py file and any cmd line args
+            start.UseShellExecute = false;
+            start.RedirectStandardOutput = true;
+            using (Process process = Process.Start(start))
+            {
+                using (StreamReader reader = process.StandardOutput)
+                {
+                    labelText = reader.ReadToEnd();
+                    Console.Write(labelText);
+                }
+            }
 
             return labelText;
         }
