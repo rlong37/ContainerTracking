@@ -18,7 +18,7 @@ namespace ContainerTracking
 
             //store cameraID and image in variables
             //temporary values until camera is working
-            Image i = Image.FromFile("D:\\Programming\\Git\\ContainerTracking\\ImageToText\\label1.png");
+            Image i = Image.FromFile("D://Programming//Git//ContainerTracking//ImageToText//label1.png");
             int cameraID = 1;
 
             //call Python application to extract text
@@ -39,15 +39,15 @@ namespace ContainerTracking
         {
             string labelText;
             ProcessStartInfo start = new ProcessStartInfo();
-            start.FileName = "D:\\Python\\Python36\\python.exe"; //cmd is full path to python.exe
-            start.Arguments = "D:\\Programming\\Git\\ContainerTracking\\ImageToText\\ExtractText.py"; //args is path to .py file and any cmd line args
+            start.FileName = "D://Python//Python36//python.exe"; //cmd is full path to python.exe
+            start.Arguments = "D://Programming//Git//ContainerTracking//ImageToText//ExtractText.py"; //args is path to .py file and any cmd line args
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
             using (Process process = Process.Start(start))
             {
                 using (StreamReader reader = process.StandardOutput)
                 {
-                    labelText = reader.ReadToEnd();
+                    labelText = reader.ReadLine();
                     Console.Write(labelText);
                 }
             }
