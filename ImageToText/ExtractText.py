@@ -9,12 +9,12 @@ def main():
 	pytesseract.pytesseract.tesseract_cmd = 'D:\\Tesseract-OCR\\tesseract'
 
 	#read in the image
-	img = cv2.imread('D:\\Programming\\Git\\ContainerTracking\\ImageToText\\label1.png')
+	img = cv2.imread('D:\\Programming\\Git\\ContainerTracking\\ImageToText\\label2.png')
 	
 	#initial bilateralFilter parameters
-	d = 8
-	sigmaColor = 255
-	sigmaSpace = 255
+	d = 10
+	sigmaColor = 200
+	sigmaSpace = 200
 
 	#get text from image
 	text = extract(img, d, sigmaColor, sigmaSpace)
@@ -25,23 +25,8 @@ def main():
 	
 	while(correct == False):
 		if(count == 0):
-			#modify settings bilateralFilter parameters
+			#modify settings bilateralFilter parameters for cleaning the image to crop
 			d = 8
-			sigmaColor = 200
-			sigmaSpace = 200
-			
-			#try to extract text again 
-			text = extract(img, d, sigmaColor, sigmaSpace)
-			
-			#check if text is correct
-			correct = check(text)
-			count += 1
-			
-			print("Trying again")
-			
-		elif(count == 1):
-			#modify settings bilateralFilter parameters
-			d = 6
 			sigmaColor = 255
 			sigmaSpace = 255
 			
@@ -54,11 +39,26 @@ def main():
 			
 			print("Trying again")
 			
+		elif(count == 1):
+			#modify settings bilateralFilter parameters
+			d = 9
+			sigmaColor = 150
+			sigmaSpace = 150
+			
+			#try to extract text again 
+			text = extract(img, d, sigmaColor, sigmaSpace)
+			
+			#check if text is correct
+			correct = check(text)
+			count += 1
+			
+			print("Trying again")
+			
 		elif(count == 2):
 			#modify settings bilateralFilter parameters
-			d = 6
-			sigmaColor = 200
-			sigmaSpace = 200
+			d = 9
+			sigmaColor = 100
+			sigmaSpace = 100
 			
 			#try to extract text again
 			text = extract(img, d, sigmaColor, sigmaSpace)
@@ -81,21 +81,45 @@ def main():
 
 
 def extract(img, d, sigmaColor, sigmaSpace):
+	#denoise original img
+	cleanIMG = cv2.fastNlMeansDenoisingColored(img)
+	
 	#convert image to grayscale and blur it
-	gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-	#gray =  cv2.GaussianBlur(gray, (5, 5), 0)
+	gray = cv2.cvtColor(cleanIMG, cv2.COLOR_BGR2GRAY)
 	gray = cv2.bilateralFilter(gray, d, sigmaColor, sigmaSpace)
 
-	#show grayed and blurred image
-	#cv2.imshow("Gray", gray)
-	#cv2.waitKey(0)
-
 	#detect edges in the image
+	#this is for finding the bounded rectangle in order to crop
 	edged = cv2.Canny(gray, 10, 250)
-	#cv2.imshow("Edged", edged)
-	#cv2.waitKey(0)
-
-	cv2.imwrite('newimg.png', gray)
+	
+	edgeClean = cv2.bilateralFilter(edged, 11, 50, 50)
+	
+	#find contours
+	edgeClean, contours, hierarchy = cv2.findContours(edgeClean.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+	cnt = contours[4]
+	
+	#find extreme points
+	x, y = [], []
+	for line in contours:
+		for c in line:
+			x.append(c[0][0])
+			y.append(c[0][1])
+		
+	x1, x2, y1, y2 = min(x), max(x), min(y), max(y)
+	
+	#crop image
+	cropped = img[y1:y2, x1:x2]
+	
+	#clean cropped image
+	cleanCropped = cv2.fastNlMeansDenoisingColored(cropped)
+	
+	#convert image to grayscale and blur it
+	gCropped = cv2.cvtColor(cleanCropped, cv2.COLOR_BGR2GRAY)
+	gCropped = cv2.bilateralFilter(gCropped, 10, 100, 100)
+	
+	#save modified img
+	cv2.imwrite('newimg.png', gCropped)
+	
 	
 	#get text from image and clean string
 	text = pytesseract.image_to_string(Image.open('newimg.png'))
@@ -104,6 +128,7 @@ def extract(img, d, sigmaColor, sigmaSpace):
 	text = cleanedText[0].split("\n")[0]
 	return(text)
 
+	
 def check(text):
 	#check to see if text follows regex
 	regexp = re.compile('^[A-Z0-9]{8}UPS$')
