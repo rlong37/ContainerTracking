@@ -1,0 +1,11 @@
+D:\Programming\Git\UPSContainerTracking\UPSContainerTracking\bin\Debug\netcoreapp2.0\UPSContainerTracking.deps.json
+D:\Programming\Git\UPSContainerTracking\UPSContainerTracking\bin\Debug\netcoreapp2.0\UPSContainerTracking.runtimeconfig.json
+D:\Programming\Git\UPSContainerTracking\UPSContainerTracking\bin\Debug\netcoreapp2.0\UPSContainerTracking.runtimeconfig.dev.json
+D:\Programming\Git\UPSContainerTracking\UPSContainerTracking\bin\Debug\netcoreapp2.0\UPSContainerTracking.dll
+D:\Programming\Git\UPSContainerTracking\UPSContainerTracking\obj\Debug\netcoreapp2.0\UPSContainerTracking.csprojResolveAssemblyReference.cache
+D:\Programming\Git\UPSContainerTracking\UPSContainerTracking\obj\Debug\netcoreapp2.0\UPSContainerTracking.csproj.CoreCompileInputs.cache
+D:\Programming\Git\UPSContainerTracking\UPSContainerTracking\obj\Debug\netcoreapp2.0\UPSContainerTracking.AssemblyInfoInputs.cache
+D:\Programming\Git\UPSContainerTracking\UPSContainerTracking\obj\Debug\netcoreapp2.0\UPSContainerTracking.AssemblyInfo.cs
+D:\Programming\Git\UPSContainerTracking\UPSContainerTracking\bin\Debug\netcoreapp2.0\UPSContainerTracking.pdb
+D:\Programming\Git\UPSContainerTracking\UPSContainerTracking\obj\Debug\netcoreapp2.0\UPSContainerTracking.dll
+D:\Programming\Git\UPSContainerTracking\UPSContainerTracking\obj\Debug\netcoreapp2.0\UPSContainerTracking.pdb
