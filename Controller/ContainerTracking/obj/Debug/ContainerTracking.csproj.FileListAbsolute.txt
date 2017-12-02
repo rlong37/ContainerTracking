@@ -1,7 +1,0 @@
-D:\Programming\Git\ContainerTracking\Controller\ContainerTracking\bin\Debug\ContainerTracking.pdb
-D:\Programming\Git\ContainerTracking\Controller\ContainerTracking\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
-D:\Programming\Git\ContainerTracking\Controller\ContainerTracking\obj\Debug\ContainerTracking.csprojResolveAssemblyReference.cache
-D:\Programming\Git\ContainerTracking\Controller\ContainerTracking\obj\Debug\ContainerTracking.csproj.CoreCompileInputs.cache
-D:\Programming\Git\ContainerTracking\Controller\ContainerTracking\obj\Debug\ContainerTracking.pdb
-D:\Programming\Git\ContainerTracking\Controller\ContainerTracking\bin\Debug\ContainerTracking.exe
-D:\Programming\Git\ContainerTracking\Controller\ContainerTracking\obj\Debug\ContainerTracking.exe
