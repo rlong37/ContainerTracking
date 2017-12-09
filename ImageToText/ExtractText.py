@@ -4,31 +4,32 @@ import numpy as np
 import cv2
 import re
 
-def main():
+def readImg(img):
 	#set path to tesseract
 	pytesseract.pytesseract.tesseract_cmd = 'D:\\Tesseract-OCR\\tesseract'
-
-	#read in the image
-	img = cv2.imread('D:\\Programming\\Git\\ContainerTracking\\ImageToText\\label2.png')
 	
 	#initial bilateralFilter parameters
-	d = 10
-	sigmaColor = 200
-	sigmaSpace = 200
+	#d = 7
+	#sigmaColor = 150
+	#sigmaSpace = 115
 
+	d = 8
+	sigmaColor = 300
+	sigmaSpace = 300
 	#get text from image
 	text = extract(img, d, sigmaColor, sigmaSpace)
 	
 	#check format of string
 	count = 0
-	correct = check(text)
+	#correct = check(text)
+	correct = True
 	
 	while(correct == False):
 		if(count == 0):
 			#modify settings bilateralFilter parameters for cleaning the image to crop
-			d = 8
-			sigmaColor = 255
-			sigmaSpace = 255
+			d = 7
+			sigmaColor = 50
+			sigmaSpace = 50
 			
 			#try to extract text again 
 			text = extract(img, d, sigmaColor, sigmaSpace)
@@ -36,14 +37,12 @@ def main():
 			#check if text is correct
 			correct = check(text)
 			count += 1
-			
-			print("Trying again")
 			
 		elif(count == 1):
 			#modify settings bilateralFilter parameters
-			d = 9
-			sigmaColor = 150
-			sigmaSpace = 150
+			d = 6
+			sigmaColor = 50
+			sigmaSpace = 50
 			
 			#try to extract text again 
 			text = extract(img, d, sigmaColor, sigmaSpace)
@@ -52,13 +51,12 @@ def main():
 			correct = check(text)
 			count += 1
 			
-			print("Trying again")
-			
 		elif(count == 2):
 			#modify settings bilateralFilter parameters
-			d = 9
-			sigmaColor = 100
-			sigmaSpace = 100
+			#applpy a much strong blur
+			d = 8
+			sigmaColor = 300
+			sigmaSpace = 300
 			
 			#try to extract text again
 			text = extract(img, d, sigmaColor, sigmaSpace)
@@ -66,15 +64,14 @@ def main():
 			#check if text is correct
 			correct = check(text)
 			count += 1
-			
-			print("Trying again")
 		
 		elif(count == 3):
-			print('Could not read text.')
+		#TO DO: compare partial text against database of labels to try to find a match
+			return null, count
 			break
 			
 	if(correct == True):		
-		print(text)
+		return text, count
 
 
 	
@@ -115,28 +112,33 @@ def extract(img, d, sigmaColor, sigmaSpace):
 	
 	#convert image to grayscale and blur it
 	gCropped = cv2.cvtColor(cleanCropped, cv2.COLOR_BGR2GRAY)
-	gCropped = cv2.bilateralFilter(gCropped, 10, 100, 100)
+	gCropped = cv2.bilateralFilter(gCropped, 7, 100, 100)
 	
 	#save modified img
 	cv2.imwrite('newimg.png', gCropped)
-	
 	
 	#get text from image and clean string
 	text = pytesseract.image_to_string(Image.open('newimg.png'))
 	text = text.replace(" ", "")
 	cleanedText = text.split("/")
+	cleanedText = cleanedText[0].split("I")
+	cleanedText = cleanedText[0].split("|")
 	text = cleanedText[0].split("\n")[0]
+	
+	#strip string of any non alphanumeric characters
+	text = re.sub('[^0-9a-zA-Z]+', '', text)
+	
 	return(text)
 
-	
 def check(text):
 	#check to see if text follows regex
-	regexp = re.compile('^[A-Z0-9]{8}UPS$')
-	if regexp.search(text):
+	regexp1 = re.compile('^[A-Z0-9]{8}UPS$')
+	regexp2 = re.compile('^[A-Z0-9]{7}UPS$')
+	if regexp1.search(text):
+		return True
+	elif regexp2.search(text):
 		return True
 	else:
 		return False
 	
 	
-if  __name__ =='__main__':
-    main()
