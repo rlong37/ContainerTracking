@@ -50,6 +50,7 @@ BEGIN
 CREATE TABLE [dbo].[Container](
 	[ContainerID] [bigint] IDENTITY(1,1) NOT NULL,
 	[LableText] [nvarchar](20) NULL,
+	[IsPriority] [bit] NOT NULL,
 	--[TypeCode] [nvarchar](3) NOT NULL,
 	--[SerialNumber] [int] NOT NULL,
 	--[OwnerCode] [nvarchar](4) NOT NULL,
@@ -70,6 +71,7 @@ IF NOT EXISTS (SELECT * FROM sys.objects
 BEGIN
 CREATE TABLE [dbo].[Camera](
 	[CameraID] [int] IDENTITY(1,1) NOT NULL,
+	[MAC_Address] [nvarchar](100) NOT NULL,
 	[LocationID] [int] NULL,
 	[DateAdded] [datetime] NOT NULL,
  CONSTRAINT [PK_CameraID] PRIMARY KEY CLUSTERED 
