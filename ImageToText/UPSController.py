@@ -4,13 +4,16 @@ import cv2
 import numpy
 import os
 
+#custom code imports
+from DatabaseController import DatabaseController, DatabaseCredentials, Container
+from ContainerAlert import alertPopUp
+
 
 def main():
     start_time = time.time()
     picCommand = "fswebcam -r 352x288 -S 20 --no-banner image.jpg"
-    #os.system(picCommand)
-    img = cv2.imread("label4.png")
-    #img = cv2.imread("image.jpg")
+    os.system(picCommand)
+    img = cv2.imread("image.jpg")
     takePictureTime = str(round(time.time() - start_time, 2))
     
     #extract text from label
@@ -20,16 +23,30 @@ def main():
     extract_time = str(round(end_extract - start_extract, 2))
     
     cameraid = getMAC()
+    print(cameraid)
+    
+    #Future update: Change these to be stored in a config file, preferably encrypted
+    host = "localhost"
+    db = "upsdemo"
+    user = "upsuser"
+    passwd = "upsuser"
+    
+    #create an object with the database credentials
+    dbCreds = DatabaseCredentials(host, db, user, passwd)
+    #create the DBController
+    dbCont = DatabaseController(dbCreds)
+    
+    dbCont.updateContainer(label, cameraid)
+    container = dbCont.retrieveContainer(label)
+    dbCont.endConnection()
+    
+    alertPopUp(container)
+    
+    
+    
     finaltime = round((time.time() - start_time), 2)
     
-    print("\nContainer: " + label + '\nCamera: ' + cameraid + "\n")
-    print("%s seconds to execute entire program" %finaltime)
-    print("Program had to try again " + str(count) + " times.")
-    print("Took " + takePictureTime + " seconds to take picture.")
-    print("Took " + extract_time + " seconds to extract text.")
-    cv2.imshow("img", img)
-    cv2.waitKey(0)
-
+    
 
 # Return the MAC address of the specified interface
 def getMAC(interface='eth0'):
